@@ -2753,7 +2753,7 @@ ac_config_headers="$ac_config_headers config.h"
 
 
 BASHVERS=4.3
-RELSTATUS=release
+RELSTATUS=zbash
 
 case "$RELSTATUS" in
 alp*|bet*|dev*|rc*|maint*)	DEBUG='-DDEBUG' MALLOC_DEBUG='-DMALLOC_DEBUG' ;;

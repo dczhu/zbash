@@ -419,13 +419,24 @@ rl_complete (ignore, invoking_key)
 {
   rl_completion_invoking_key = invoking_key;
 
+  /*
+   * As long as COMP_SHOW_ALL_IF_AMBIGUOUS / COMP_SHOW_ALL_IF_UNMODIFIED
+   * is exported with a certain string (no matter what is set, even ""),
+   * the complete function (not menu-complete) will do the same thing as
+   * show-all-if-ambiguous / show-all-if-unmodified.
+   *
+   * But note these 2 environment variables are ONLY HERE! It means if
+   * _rl_complete_show_all / _rl_complete_show_unmodified is not set, they
+   * only work in here, not in other places where _rl_complete_show_all /
+   * _rl_complete_show_unmodified is controlling the code logic.
+   */
   if (rl_inhibit_completion)
     return (_rl_insert_char (ignore, invoking_key));
   else if (rl_last_func == rl_complete && !completion_changed_buffer)
     return (rl_complete_internal ('?'));
-  else if (_rl_complete_show_all)
+  else if (_rl_complete_show_all || getenv("COMP_SHOW_ALL_IF_AMBIGUOUS"))
     return (rl_complete_internal ('!'));
-  else if (_rl_complete_show_unmodified)
+  else if (_rl_complete_show_unmodified || getenv("COMP_SHOW_ALL_IF_UNMODIFIED"))
     return (rl_complete_internal ('@'));
   else
     return (rl_complete_internal (TAB));
@@ -756,7 +767,11 @@ fnwidth (string)
   return width;
 }
 
+#if 0
 #define ELLIPSIS_LEN	3
+#else
+/* Not using ellipsis so the #define is not needed */
+#endif
 
 static int
 fnprint (to_print, prefix_bytes)
@@ -778,19 +793,39 @@ fnprint (to_print, prefix_bytes)
 
   printed_len = 0;
 
+#if 0
   /* Don't print only the ellipsis if the common prefix is one of the
      possible completions */
   if (to_print[prefix_bytes] == '\0')
     prefix_bytes = 0;
+#else
+  /*
+   * Don't bother change 'prefix_bytes' as we are NOT using ellipsis -- We
+   * use inverse coloring for the common part.
+   */
+#endif
 
   if (prefix_bytes)
     {
+#if 0
       char ellipsis;
 
       ellipsis = (to_print[prefix_bytes] == '.') ? '_' : '.';
       for (w = 0; w < ELLIPSIS_LEN; w++)
 	putc (ellipsis, rl_outstream);
       printed_len = ELLIPSIS_LEN;
+#else
+      /* Get color sequence for the common part */
+      char *color = getenv ("COMP_PREFIX_COLOR_ESC_SEQ");
+      /* Use inverse coloring if no color sequence is specified */
+      if (!color || !*color)
+	color = "\033[7m";
+      fputs (color, rl_outstream);
+      for (w = 0; w < prefix_bytes; w++)
+	putc (to_print[w], rl_outstream);
+      fputs ("\033[0m", rl_outstream);
+      printed_len = prefix_bytes;
+#endif
     }
 
   s = to_print + prefix_bytes;
@@ -1506,10 +1541,31 @@ rl_display_match_list (matches, len, max)
       common_length = temp ? fnwidth (temp) : fnwidth (t);
       sind = temp ? strlen (temp) : strlen (t);
 
+#if 0
       if (common_length > _rl_completion_prefix_display_length && common_length > ELLIPSIS_LEN)
 	max -= common_length - ELLIPSIS_LEN;
       else
 	common_length = sind = 0;
+#else
+      /*
+       * Don't bother change 'max' as we are NOT using ellipsis -- We use
+       * inverse coloring for the common part.
+       *
+       * Also note that here < is used, instead of <=. It means this slightly
+       * changes the meaning of 'completion-prefix-display-length':
+       *
+       * Original   - When set to a value greater than zero, common prefixes
+       *              longer than this value are ...
+       * Changed to - When set to a value greater than zero, common prefixes
+       *              equal or longer than this value are ...
+       *
+       * (common_length == 1 && !temp) means the printable part is something
+       * like ./ or xyz/ -- in this case the ending / will make common_length
+       * be 1 whereas the real value should be 0.
+       */
+      if (common_length < _rl_completion_prefix_display_length || (common_length == 1 && temp))
+	common_length = sind = 0;
+#endif
     }
 
   /* How many items of MAX length can we fit in the screen window? */
