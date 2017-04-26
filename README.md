@@ -5,7 +5,7 @@ A fork of Bash with handy features
 ![Completion](/res/zbash-completion.gif)
 
 ## Introduction
-Currently only the Completion feature is modified to be faster and more friendly (see [Usage](#Usage)). Other features will be added/enhanced. Ideas, code, issue reports are welcome.
+Currently only the Completion feature is modified to be faster and more friendly (see [Usage](#usage)). Other features will be added/enhanced. Ideas, code, issue reports are welcome.
 
 ## Installation
 1. Build and install zbash
@@ -62,7 +62,7 @@ Otherwise you'll need to adjust the environment variable $PATH or choose a diffe
 }
 ```
 
-## <a name="Usage"></a>Usage
+## Usage
 The Completion:
 * When there are only few items, it's convenient to use Alt+J (forward) and Alt+K (backward) to navigate to the wanted one. For example, if you want the last item, type Alt+K once. That's it! You don't need to type the first (few) char(s) and then hit Tab. Also, Alt is under the thumb of left hand, j/k are on the right-hand side - hopefully you find it convenient :-)
 * If the items have a common part at the beginning, it will be highlighted so that you can quickly find the next char to type. Note that typing the next char is optional, you can still use Alt+J and Alt+K.
