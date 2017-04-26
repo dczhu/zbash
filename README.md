@@ -9,6 +9,7 @@ Currently only the Completion feature is modified to be faster and more friendly
 
 ## Installation
 1. Build and install zbash
+
 If you are OK with the default installation place /usr/local, then just:
 ```shell
 ./configure; make; sudo make install
@@ -19,7 +20,8 @@ Otherwise:
 ./configure --prefix=/your/preferred/dir; make; make install
 ```
 
-2. Make sure the installed command `bash` can be found ahead of the default or other `bash`. Type the following to verify:
+2. Make sure the installed `bash` can be found ahead of the default or other `bash`. Type the following to verify:
+
 ```shell
 which bash
 ```
@@ -27,9 +29,10 @@ or:
 ```shell
 bash --version
 ```
-Otherwise you need to adjust the environment variable $PATH or choose a different installation place.
+Otherwise you'll need to adjust the environment variable $PATH or choose a different installation place.
 
 3. Add settings in ~/.bashrc
+
 ```shell
 [ ! -z "$PS1" ] && {
 	# Menu-completion: cycle forward
@@ -63,11 +66,12 @@ Otherwise you need to adjust the environment variable $PATH or choose a differen
 The Completion:
 * When there are only few items, it's convenient to use Alt+J (forward) and Alt+K (backward) to navigate to the wanted one. For example, if you want the last item, type Alt+K once. That's it! You don't need to type the first (few) char(s) and then hit Tab. Also, Alt is under the thumb of left hand, j/k are on the right-hand side - hopefully you find it convenient :-)
 * If the items have a common part at the beginning, it will be highlighted so that you can quickly find the next char to type. Note that typing the next char is optional, you can still use Alt+J and Alt+K.
-* In case you want to change the (background) color of the commond part, you can modify the escape sequence of COMP\_PREFIX\_COLOR\_ESC\_SEQ (see above). You can find a quick reference to the color definitions by searching "SGR sequence" in `man grep`.
+* In case you want to change the (background) color of the common part, you can modify the escape sequence of COMP\_PREFIX\_COLOR\_ESC\_SEQ (see above). You can find a quick reference to the color definitions by searching "SGR sequence" in `man grep`.
 
 Enjoy!
 
 Deng-Cheng Zhu
+
 dengcheng(DOT)zhu(AT)gmail(DOT)com
 
 ## License
