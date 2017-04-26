@@ -12,12 +12,12 @@ Currently only the Completion feature is modified to be faster and more friendly
 
 If you are OK with the default installation place /usr/local, then just:
 ```shell
-./configure; make; sudo make install
+cd src; ./configure; make; sudo make install
 ```
 
 Otherwise:
 ```shell
-./configure --prefix=/your/preferred/dir; make; make install
+cd src; ./configure --prefix=/your/preferred/dir; make; make install
 ```
 
 2. Make sure the installed `bash` can be found ahead of the default or other `bash`. Type the following to verify:
